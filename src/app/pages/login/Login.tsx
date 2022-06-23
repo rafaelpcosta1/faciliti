@@ -1,9 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Login = () => {
-    //Criando STATE = USESTATE
+    //Criando STATE = UseState
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    //Criando UseEffect
+    useEffect(() => {
+        console.log(email);
+    }, [email]);
+
+    useEffect(() => {
+        console.log(password);
+    }, [password]);
 
     //Criando Funcões Arrow
     const handleEntrar = () => {
