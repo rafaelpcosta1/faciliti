@@ -1,1 +1,2 @@
-export * from './initPage/InitPage';
+export * from './homePage/HomePage';
+export * from './login/Login';
