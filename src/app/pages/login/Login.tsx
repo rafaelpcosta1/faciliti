@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 export const Login = () => {
     //Criando STATE = UseState
@@ -7,15 +7,14 @@ export const Login = () => {
 
     //Criar useMemo para evitar um bloco de ser executado junto com os demais estados, Melhora performance
     const emailLength = useMemo(() => {
-        console.log('Executou');
         return email.length * 1000;
     }, [email.length]);
 
-    //Criando Funcões Arrow
-    const handleEntrar = () => {
+    //Criando Funcões Arrow / Usando useCallback (Muito utilizado para guardar FUNÇÕES, melhora performance)
+    const handleEntrar = useCallback(() => {
         console.log(email);
         console.log(password);
-    }
+    }, [email, password]); //Importante colocar os states no Array de dependencias ao usar o useCallback, a não utilização do array pode trazer problemas.
 
     //retornando os elementos da pagina Login
     return (
