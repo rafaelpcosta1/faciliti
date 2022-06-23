@@ -1,18 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const Login = () => {
     //Criando STATE = UseState
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    //Criando UseEffect
-    useEffect(() => {
-        console.log(email);
-    }, [email]);
-
-    useEffect(() => {
-        console.log(password);
-    }, [password]);
+    //Criar useMemo para evitar um bloco de ser executado junto com os demais estados, Melhora performance
+    const emailLength = useMemo(() => {
+        console.log('Executou');
+        return email.length * 1000;
+    }, [email.length]);
 
     //Criando Funcões Arrow
     const handleEntrar = () => {
@@ -24,6 +21,8 @@ export const Login = () => {
     return (
         <div>
             <form>
+                <p>Quantidade de caracteres no email: {emailLength} </p>
+
                 <label>
                     <span>Email: </span>
                     <input value={email} onChange={e => setEmail(e.target.value)} />
