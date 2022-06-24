@@ -1,12 +1,12 @@
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { UsuarioLogadoContext } from "../../shared/contexts";
+import { useUsuarioLogado } from "../../shared/hooks";
 
 export const HomePage = () => {
     const counterRef = useRef({ counter: 0 });
 
     //Passando Contexto para pagina inicial do sistema.
-    const { nomeDoUsuario } = useContext(UsuarioLogadoContext);
+    const { nomeDoUsuario } = useUsuarioLogado();
 
     //Usando useRef para armazenar valores sem renderizar na tela
     return (
