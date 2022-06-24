@@ -6,7 +6,7 @@ export const HomePage = () => {
     const counterRef = useRef({ counter: 0 });
 
     //Passando Contexto para pagina inicial do sistema.
-    const { nomeDoUsuario } = useUsuarioLogado();
+    const { nomeDoUsuario, logout } = useUsuarioLogado();
 
     //Usando useRef para armazenar valores sem renderizar na tela
     return (
@@ -19,6 +19,7 @@ export const HomePage = () => {
 
             <button onClick={() => counterRef.current.counter++}>Contar</button>
             <button onClick={() => console.log(counterRef.current.counter)}>Log</button>
+            <button onClick={logout}>Logout</button>
 
             <Link to={"/login"}>Login</Link>
         </div>
