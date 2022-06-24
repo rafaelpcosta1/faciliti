@@ -1,27 +1,45 @@
-import { useRef } from "react";
-import { Link } from "react-router-dom";
-import { useUsuarioLogado } from "../../shared/hooks";
+import { useCallback, useState } from "react";
 
 export const HomePage = () => {
-    const counterRef = useRef({ counter: 0 });
+    const [lista, setLista] = useState<string[]>(["Teste1", "Teste2", "Teste3"]);
 
-    //Passando Contexto para pagina inicial do sistema.
-    const { nomeDoUsuario, logout } = useUsuarioLogado();
+    const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((e) => {
+        if (e.key === 'Enter') {
 
-    //Usando useRef para armazenar valores sem renderizar na tela
+            if (e.currentTarget.value.trim().length === 0) return;
+
+            const value = e.currentTarget.value
+            e.currentTarget.value = '';
+
+            //Formas de atualizar a lista
+            /*lista.push(e.currentTarget.value);
+            setLista([...lista]);*/
+            //setLista([...lista, e.currentTarget.value]);
+
+            // Esse é o jeito certo
+            setLista((oldLista) => {
+                //Validar se o elemento existe na lista e não inserir o dado, utilizar o já existente 'includes'
+                if (oldLista.includes(value)) return oldLista;
+
+                return [...oldLista, value];
+            });
+        }
+    }, [])
+
     return (
         <div>
-            <p>Pagina Inicial</p>
+            <p>Lista</p>
 
-            <p>{nomeDoUsuario}</p>
+            <input
+                onKeyDown={handleInputKeyDown}
+            />
 
-            <p>Contador: {counterRef.current.counter}</p>
-
-            <button onClick={() => counterRef.current.counter++}>Contar</button>
-            <button onClick={() => console.log(counterRef.current.counter)}>Log</button>
-            <button onClick={logout}>Logout</button>
-
-            <Link to={"/login"}>Login</Link>
+            <ul>
+                {lista.map((value, index) => {
+                    //Deve conter o key (Chave Unica para a lista, o React valida os elementos da lista, para garantir a performance deve ter essa key)
+                    return <li key={value}>{value}</li>
+                })}
+            </ul>
         </div>
     )
 }
