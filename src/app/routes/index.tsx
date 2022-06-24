@@ -6,10 +6,10 @@ export const Routes = () => {
         <BrowserRouter>
             <Switch>
 
-                <Route path="/pagina-inicial" element={<HomePage />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="*" element={<Navigate to="/pagina-inicial" />} />
+                <Route path="/pagina-inicial" element={<HomePage />} />
 
+                <Route path="*" element={<Navigate to="/pagina-inicial" />} />
             </Switch>
         </BrowserRouter>
     );

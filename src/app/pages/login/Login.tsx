@@ -1,9 +1,12 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
+import { UsuarioLogadoContext } from "../../shared/contexts";
 import { ButtonLogin } from "./components/ButtonLogin";
 import { InputLogin } from "./components/InputLogin";
 
 export const Login = () => {
     const inputPasswordRef = useRef<HTMLInputElement>(null);
+
+    const { nomeDoUsuario } = useContext(UsuarioLogadoContext);
 
     //Criando STATE = UseState
     const [email, setEmail] = useState('');
@@ -28,6 +31,7 @@ export const Login = () => {
         <div>
             <form>
                 <p>Quantidade de caracteres no email: {emailLength} </p>
+                <p>{nomeDoUsuario}</p>
 
                 <InputLogin
                     label="Email: "
@@ -48,7 +52,7 @@ export const Login = () => {
                     Entrar
                 </ButtonLogin>
 
-                <ButtonLogin type="button" onClick={handleEntrar} children={<>Cadastrar-se</>} />
+                {/*<ButtonLogin type="button" onClick={handleEntrar} children={<>Cadastrar-se</>} />*/}
             </form>
         </div >
     );
