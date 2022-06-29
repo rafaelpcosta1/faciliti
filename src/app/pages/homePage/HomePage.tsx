@@ -1,7 +1,12 @@
 import { useCallback, useState } from "react";
 
+interface IListItem {
+    title: string;
+    isSelected: boolean;
+}
+
 export const HomePage = () => {
-    const [lista, setLista] = useState<string[]>(["Teste1", "Teste2", "Teste3"]);
+    const [lista, setLista] = useState<IListItem[]>([]);
 
     const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((e) => {
         if (e.key === 'Enter') {
@@ -19,9 +24,15 @@ export const HomePage = () => {
             // Esse é o jeito certo
             setLista((oldLista) => {
                 //Validar se o elemento existe na lista e não inserir o dado, utilizar o já existente 'includes'
-                if (oldLista.includes(value)) return oldLista;
+                if (oldLista.some((listItem) => listItem.title === value)) return oldLista;
 
-                return [...oldLista, value];
+                return [
+                    ...oldLista,
+                    {
+                        title: value,
+                        isSelected: false,
+                    }
+                ];
             });
         }
     }, [])
@@ -34,10 +45,29 @@ export const HomePage = () => {
                 onKeyDown={handleInputKeyDown}
             />
 
+            <h3>{lista.filter((listItem) => listItem.isSelected).length}</h3>
+
             <ul>
-                {lista.map((value, index) => {
+                {lista.map((listItem) => {
                     //Deve conter o key (Chave Unica para a lista, o React valida os elementos da lista, para garantir a performance deve ter essa key)
-                    return <li key={value}>{value}</li>
+                    return <li key={listItem.title}>
+                        <input
+                            type="checkbox"
+                            checked={listItem.isSelected}
+                            onChange={() => {
+                                setLista((oldLista) => {
+                                    return oldLista.map(oldListItem => {
+                                        const newIsSelected = (oldListItem.title === listItem.title) ? !oldListItem.isSelected : oldListItem.isSelected;
+                                        return {
+                                            ...oldListItem, //carregando todos os dados anterior da lista
+                                            isSelected: newIsSelected,
+                                        };
+                                    });
+                                });
+                            }}
+                        />
+                        {listItem.title}
+                    </li>
                 })}
             </ul>
         </div>
