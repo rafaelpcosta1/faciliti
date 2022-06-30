@@ -25,27 +25,45 @@ export const HomePage = () => {
             const value = e.currentTarget.value
             e.currentTarget.value = '';
 
-            //Formas de atualizar a lista
-            /*lista.push(e.currentTarget.value);
-            setLista([...lista]);*/
-            //setLista([...lista, e.currentTarget.value]);
+            //Validar se o elemento existe na lista e não inserir o dado, utilizar o já existente 'includes'
+            if (lista.some((listItem) => listItem.title === value)) return;
 
-            // Esse é o jeito certo
-            setLista((oldLista) => {
-                //Validar se o elemento existe na lista e não inserir o dado, utilizar o já existente 'includes'
-                if (oldLista.some((listItem) => listItem.title === value)) return oldLista;
-
-                return [
-                    ...oldLista,
-                    {
-                        title: value,
-                        isCompleted: false,
-                        id: oldLista.length,
+            TarefasService.create({ title: value, isCompleted: false })
+                .then((result) => {
+                    if (result instanceof ApiException) { }
+                    else {
+                        // Esse é o jeito certo
+                        setLista((oldLista) => [...oldLista, result]);
                     }
-                ];
-            });
+                });
         }
-    }, [])
+    }, [lista])
+
+    const handleToggleComplete = useCallback((id: number) => {
+
+        const tarefaToUpdate = lista.find((tarefa) => tarefa.id === id);
+        if (!tarefaToUpdate) return;
+
+        TarefasService.updateById(id, {
+            ...tarefaToUpdate,
+            isCompleted: !tarefaToUpdate.isCompleted,
+        })
+            .then((result) => {
+                if (result instanceof ApiException) {
+                    alert(result.message)
+                }
+                else {
+                    setLista((oldLista) => {
+                        return oldLista.map((oldListItem) => {
+
+                            if (oldListItem.id === id) return result;
+                            return oldListItem;
+                        });
+                    });
+                }
+            });
+
+    }, [lista]);
 
     return (
         <div>
@@ -64,17 +82,7 @@ export const HomePage = () => {
                         <input
                             type="checkbox"
                             checked={listItem.isCompleted}
-                            onChange={() => {
-                                setLista((oldLista) => {
-                                    return oldLista.map(oldListItem => {
-                                        const newIsCompleted = (oldListItem.title === listItem.title) ? !oldListItem.isCompleted : oldListItem.isCompleted;
-                                        return {
-                                            ...oldListItem, //carregando todos os dados anterior da lista
-                                            isCompleted: newIsCompleted,
-                                        };
-                                    });
-                                });
-                            }}
+                            onChange={() => handleToggleComplete(listItem.id)}
                         />
                         {listItem.title}
                     </li>
